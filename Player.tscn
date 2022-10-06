@@ -1,0 +1,128 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://Polygone.png" type="Texture" id=2]
+[ext_resource path="res://Gun.tscn" type="PackedScene" id=3]
+[ext_resource path="res://UI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://GameOver.gd" type="Script" id=5]
+[ext_resource path="res://Continue.png" type="Texture" id=6]
+[ext_resource path="res://Audio/Fire.wav" type="AudioStream" id=7]
+[ext_resource path="res://GunAudio.gd" type="Script" id=8]
+[ext_resource path="res://addons/Recorder/recorder.gd" type="Script" id=9]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 16 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 16, 16 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "charged_jump"
+length = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 3 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "charging_jump"
+length = 0.26
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 2 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "idle"
+length = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+
+[node name="Player" type="KinematicBody2D" groups=["Player"]]
+scale = Vector2( 1.2, 1.2 )
+collision_layer = 128
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -4.76837e-07, 4.76837e-07 )
+texture = ExtResource( 2 )
+vframes = 4
+frame = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[node name="Gun" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[node name="BulletSpawn" type="Position2D" parent="Gun"]
+position = Vector2( 11, 0 )
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+
+[node name="HurtboxCollider" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/charged_jump = SubResource( 3 )
+anims/charging_jump = SubResource( 4 )
+anims/idle = SubResource( 5 )
+
+[node name="UI" parent="." instance=ExtResource( 4 )]
+margin_left = -405.833
+margin_top = -250.0
+margin_right = -405.833
+margin_bottom = -250.0
+rect_scale = Vector2( 2, 2 )
+
+[node name="GameOver" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 6 )
+script = ExtResource( 5 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -7.0
+script = ExtResource( 8 )
+
+[node name="Recorder" type="ReferenceRect" parent="."]
+margin_left = -425.0
+margin_top = -249.0
+margin_right = 425.0
+margin_bottom = 249.0
+script = ExtResource( 9 )
+
+[connection signal="fire" from="Gun" to="AudioStreamPlayer" method="_on_Gun_fire"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_Hurtbox_body_entered"]
+[connection signal="time_over" from="UI" to="." method="_on_UI_time_over"]

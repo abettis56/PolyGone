@@ -1,0 +1,14 @@
+[gd_scene format=2]
+
+[node name="EndCard" type="Node2D"]
+scale = Vector2( 4, 4 )
+
+[node name="Control" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 23.0
+margin_top = 51.25
+margin_right = 236.0
+margin_bottom = 99.25
+text = "Thanks for playing!"
+align = 1

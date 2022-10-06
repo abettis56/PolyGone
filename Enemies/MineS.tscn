@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://MineS.png" type="Texture" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[node name="MineS" type="KinematicBody2D" groups=["Immune"]]
+scale = Vector2( 1.2, 1.2 )
+collision_layer = 512
+collision_mask = 513
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
